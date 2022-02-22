@@ -8,8 +8,9 @@
 #include <cstring>
 #include <string>
 #include <cstdint>
-#include <stdio.h>
+#include <cstdio>
 #include <cstdlib>
+
 
 extern uint16_t vetex[200][200][200][9];
 
@@ -78,12 +79,13 @@ public:
     bool print_ele();
     bool print_face();
     bool print_boundary();
-    std::string filename;
-    void fileroot(std::string arg){
+    bool printAll();
+
+    void setFileroot(std::string arg){
         this -> filename = arg;
     }
 private:
-
+    std::string filename;
     int heiN, lenN, widN;
     int vcount = 0;
     int ecount = 0;

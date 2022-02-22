@@ -3,8 +3,18 @@
 //
 #include <sstream>
 #include "obj.h"
-
+#include <iostream>
 uint16_t vetex[200][200][200][9];
+
+bool cube::printAll(){
+bool res = true;
+res = res & print_vetex() & print_ele() & print_face() & print_boundary();
+if(res)
+    std::cout << "Print 9 file to " << filename << std::endl;
+else
+    std::cout << "Fail to generate file." << std::endl;
+return res;
+}
 
 inline int adjust(int h, int w, int le){
     if(h!=1 && w!=1 && le!=1)

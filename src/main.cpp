@@ -1,4 +1,5 @@
 #include<iostream>
+#include "cubegen/obj.h"
 #include "Camera.h"
 #include "shader_m.h"
 #include "stb_image.h"
@@ -21,12 +22,18 @@ float lastFrame = 0.0f;
 int main()
 {
 
+//    //cubegen
+//    cube c=cube(1,1,1,1.0,1.0,1.0,0,0,0);
+//    c.setFileroot("../reference/");
+//    c.printAll();
+
+
     glfwWindow window = glfwWindow(SCR_WIDTH, SCR_HEIGHT, "FEM_GL");
     window.glfwWindowInit();
 
 
     // configure global opengl state
-    // -----------------------------
+    // -----------------------------a
     glEnable(GL_DEPTH_TEST);
 
     // build and compile our shader zprogram
