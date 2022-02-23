@@ -3,6 +3,7 @@
 //
 #include <sstream>
 #include "obj.h"
+#include <iostream>
 
 uint16_t vetex[200][200][200][9];
 
@@ -25,6 +26,17 @@ inline int adjust(int h, int w, int le){
         return 1;
 
     return 0;
+}
+
+bool cube::print_all(){
+bool res = true;
+res = res & this -> print_boundary() & this -> print_ele()
+        & this -> print_face() & this -> print_vetex();
+    if(res)
+        std::cout << "Print 9 files to "<< this -> filename << std::endl;
+    else
+        std::cout << "Print Failed!" << std::endl;
+    return res;
 }
 
 void cube::initVetex(){

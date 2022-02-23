@@ -21,10 +21,16 @@ set(TINYCTHREAD "${GLFW_SOURCE_DIR}/deps/tinycthread.h"
         "${GLFW_SOURCE_DIR}/deps/tinycthread.c")
 
 #add source to application
-file(GLOB SOURCE "./src/*.cpp" "./src/cubegen/*.cpp")
+
+aux_source_directory(./src SOURCE)
+aux_source_directory(./src/render RENDER)
+aux_source_directory(./src/loader LOADER)
+aux_source_directory(./src/cubegen CUBE)
+set (SRC "${SOURCE}" "${RENDER}" "${LOADER}" "${CUBE}")
+
 
 #add project built dependence
-add_executable(fem ${SOURCE} ${GLAD} ${GETOPT} ${TINYCTHREAD})
+add_executable(fem ${SRC} ${GLAD} ${GETOPT} ${TINYCTHREAD})
 
 #link glfw library(libglfw3.a) built from source
 target_link_libraries(fem glfw ${GLFW_LIBRARIES})
@@ -35,4 +41,3 @@ target_include_directories(fem PUBLIC
         "${THIRD_PARTY_DIR}/glm-0.9.9.8"
         "${THIRD_PARTY_DIR}/glad/include"
         )
-

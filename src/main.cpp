@@ -1,11 +1,10 @@
 #include<iostream>
-#include "Camera.h"
-#include "shader_m.h"
+#include "render/Camera.h"
+#include "render/shader_m.h"
 #include "stb_image.h"
-#include "tetLoader.h"
-#include "glfwWindow.h"
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "loader/tetLoader.h"
+#include "render/glfwWindow.h"
+#include "cubegen/obj.h"
 
 // settings
 const unsigned int SCR_WIDTH = 1200;
@@ -17,9 +16,20 @@ Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
-
+std::vector<float> ver;
+std::vector<int> face, ele;
 int main()
 {
+//    generate cube mesh
+//    cube c = cube(1,1,1,1,1,1,0,0,0);
+//    c.fileroot("../reference/");
+//    c.print_all();
+
+//load
+    tetLoader t("../reference/" ,"bar111", &ver, &face, &ele);
+    t.loadAll();
+    t.dump();
+
 
     glfwWindow window = glfwWindow(SCR_WIDTH, SCR_HEIGHT, "FEM_GL");
     window.glfwWindowInit();

@@ -1,0 +1,5 @@
+"D:\CLion 2021.1.2\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - NMake Makefiles" E:\GitHub\FEM_GL
+-- Using Win32 for window creation
+-- Configuring done
+-- Generating done
+-- Build files have been written to: E:/GitHub/FEM_GL/cmake-build-debug

@@ -78,6 +78,7 @@ public:
     bool print_ele();
     bool print_face();
     bool print_boundary();
+    bool print_all();
     std::string filename;
     void fileroot(std::string arg){
         this -> filename = arg;

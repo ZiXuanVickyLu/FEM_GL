@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="GLFW"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="msvc8"/>
+		<Option virtualFolders="CMake Files\;CMake Files\external\;CMake Files\external\glfw-3.3.6\;CMake Files\external\glfw-3.3.6\src\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="E:/GitHub/FEM_GL/cmake-build-debug/REQUIRED"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\Makefile VERBOSE=1 all"/>
+					<CompileFile command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="uninstall">
+				<Option working_dir="E:/GitHub/FEM_GL/cmake-build-debug/REQUIRED"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\Makefile VERBOSE=1 uninstall"/>
+					<CompileFile command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="update_mappings">
+				<Option working_dir="E:/GitHub/FEM_GL/cmake-build-debug/REQUIRED/src"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\src\Makefile VERBOSE=1 update_mappings"/>
+					<CompileFile command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\src\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\src\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\src\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="glfw">
+				<Option output="E:/GitHub/FEM_GL/cmake-build-debug/REQUIRED/src/glfw3.lib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="E:/GitHub/FEM_GL/cmake-build-debug/REQUIRED/src"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add option="-D_GLFW_USE_CONFIG_H"/>
+					<Add option="-DUNICODE"/>
+					<Add option="-D_UNICODE"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add directory="E:/GitHub/FEM_GL/external/glfw-3.3.6/include"/>
+					<Add directory="E:/GitHub/FEM_GL/external/glfw-3.3.6/src"/>
+					<Add directory="E:/GitHub/FEM_GL/cmake-build-debug/REQUIRED/src"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\ATLMFC\include"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\winrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\cppwinrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\src\Makefile VERBOSE=1 glfw"/>
+					<CompileFile command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\src\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\src\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\src\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="glfw/fast">
+				<Option output="E:/GitHub/FEM_GL/cmake-build-debug/REQUIRED/src/glfw3.lib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="E:/GitHub/FEM_GL/cmake-build-debug/REQUIRED/src"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add option="-D_GLFW_USE_CONFIG_H"/>
+					<Add option="-DUNICODE"/>
+					<Add option="-D_UNICODE"/>
+					<Add option="-D_CRT_SECURE_NO_WARNINGS"/>
+					<Add directory="E:/GitHub/FEM_GL/external/glfw-3.3.6/include"/>
+					<Add directory="E:/GitHub/FEM_GL/external/glfw-3.3.6/src"/>
+					<Add directory="E:/GitHub/FEM_GL/cmake-build-debug/REQUIRED/src"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\ATLMFC\include"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\winrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\cppwinrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\src\Makefile VERBOSE=1 glfw/fast"/>
+					<CompileFile command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\src\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\src\Makefile VERBOSE=1 clean"/>
+					<DistClean command="nmake /NOLOGO /f E:\GitHub\FEM_GL\cmake-build-debug\REQUIRED\src\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="E:/GitHub/FEM_GL/cmake-build-debug/REQUIRED/src/glfw_config.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/CMake/GenerateMappings.cmake">
+			<Option target="update_mappings"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/include/GLFW/glfw3.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/include/GLFW/glfw3native.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/context.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/egl_context.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/egl_context.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/init.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/input.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/internal.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/mappings.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/mappings.h.in">
+			<Option target="update_mappings"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/monitor.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/osmesa_context.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/osmesa_context.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/vulkan.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/wgl_context.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/wgl_context.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/win32_init.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/win32_joystick.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/win32_joystick.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/win32_monitor.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/win32_platform.h">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/win32_thread.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/win32_time.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/win32_window.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/window.c">
+			<Option target="glfw"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\external\glfw-3.3.6\"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/cmake_uninstall.cmake.in">
+			<Option virtualFolder="CMake Files\external\glfw-3.3.6\"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\external\glfw-3.3.6\src\"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/glfw3.pc.in">
+			<Option virtualFolder="CMake Files\external\glfw-3.3.6\src\"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/glfw3Config.cmake.in">
+			<Option virtualFolder="CMake Files\external\glfw-3.3.6\src\"/>
+		</Unit>
+		<Unit filename="E:/GitHub/FEM_GL/external/glfw-3.3.6/src/glfw_config.h.in">
+			<Option virtualFolder="CMake Files\external\glfw-3.3.6\src\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
