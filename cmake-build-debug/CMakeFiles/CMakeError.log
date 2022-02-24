@@ -1,14 +1,14 @@
 Determining if the include file pthread.h exists failed with the following output:
-Change Dir: E:/GitHub/FEM_GL/cmake-build-debug/CMakeFiles/CMakeTmp
+Change Dir: E:/Github/FEM_GL/cmake-build-debug/CMakeFiles/CMakeTmp
 
-Run Build Command(s):nmake /nologo cmTC_324af\fast && 	"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64\nmake.exe"  -f CMakeFiles\cmTC_324af.dir\build.make /nologo -L                  CMakeFiles\cmTC_324af.dir\build
-Building C object CMakeFiles/cmTC_324af.dir/CheckIncludeFile.c.obj
-	"C:\PROGRA~2\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\Hostx64\x64\cl.exe" @C:\Users\birdpeople\AppData\Local\Temp\nm78D8.tmp
-CheckIncludeFile.c
-E:\GitHub\FEM_GL\cmake-build-debug\CMakeFiles\CMakeTmp\CheckIncludeFile.c(1): fatal error C1083: Cannot open include file: 'pthread.h': No such file or directory
-NMAKE : fatal error U1077: '"C:\PROGRA~2\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\Hostx64\x64\cl.exe"' : return code '0x2'
+Run Build Command(s):nmake -f Makefile /nologo cmTC_3b837\fast && 	"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64\nmake.exe"  -f CMakeFiles\cmTC_3b837.dir\build.make /nologo -L                  CMakeFiles\cmTC_3b837.dir\build
+Building C object CMakeFiles/cmTC_3b837.dir/CheckIncludeFile.c.obj
+	D:\JetBrains\Toolbox\apps\CLion\ch-0\213.6777.58\bin\cmake\win\bin\cmake.exe -E cmake_cl_compile_depends --dep-file=CMakeFiles\cmTC_3b837.dir\CheckIncludeFile.c.obj.d --working-dir=E:\Github\FEM_GL\cmake-build-debug\CMakeFiles\CMakeTmp --filter-prefix="注意: 包含文件:  " -- C:\PROGRA~2\MICROS~2\2019\COMMUN~1\VC\Tools\MSVC\1429~1.301\bin\Hostx64\x64\cl.exe @C:\Users\BIRDPE~1\AppData\Local\Temp\nm25CB.tmp
+CheckIncludeFile.c
+E:\Github\FEM_GL\cmake-build-debug\CMakeFiles\CMakeTmp\CheckIncludeFile.c(1): fatal error C1083: 鏃犳硶鎵撳紑鍖呮嫭鏂囦欢: 鈥減thread.h鈥? No such file or directory
+NMAKE : fatal error U1077: “D:\JetBrains\Toolbox\apps\CLion\ch-0\213.6777.58\bin\cmake\win\bin\cmake.exe”: 返回代码“0x2”
 Stop.
-NMAKE : fatal error U1077: '"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64\nmake.exe"' : return code '0x2'
+NMAKE : fatal error U1077: “"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX64\x64\nmake.exe"”: 返回代码“0x2”
 Stop.
 
 

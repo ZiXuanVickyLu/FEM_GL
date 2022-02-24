@@ -1,45 +1,26 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
-  "C"
-  "CXX"
   )
-# The set of files for implicit dependencies of each language:
-set(CMAKE_DEPENDS_CHECK_C
-  "E:/GitHub/FEM_GL/external/glad/src/glad.c" "E:/GitHub/FEM_GL/cmake-build-debug/CMakeFiles/fem.dir/external/glad/src/glad.c.obj"
-  "E:/GitHub/FEM_GL/external/glfw-3.3.6/deps/getopt.c" "E:/GitHub/FEM_GL/cmake-build-debug/CMakeFiles/fem.dir/external/glfw-3.3.6/deps/getopt.c.obj"
-  "E:/GitHub/FEM_GL/external/glfw-3.3.6/deps/tinycthread.c" "E:/GitHub/FEM_GL/cmake-build-debug/CMakeFiles/fem.dir/external/glfw-3.3.6/deps/tinycthread.c.obj"
-  )
-set(CMAKE_C_COMPILER_ID "MSVC")
 
-# The include file search paths:
-set(CMAKE_C_TARGET_INCLUDE_PATH
-  "../external/eigen"
-  "../external/glfw-3.3.6/deps"
-  "../external/glm-0.9.9.8"
-  "../external/glad/include"
-  "../external/glfw-3.3.6/include"
-  )
-set(CMAKE_DEPENDS_CHECK_CXX
-  "E:/GitHub/FEM_GL/src/cubegen/obj.cpp" "E:/GitHub/FEM_GL/cmake-build-debug/CMakeFiles/fem.dir/src/cubegen/obj.cpp.obj"
-  "E:/GitHub/FEM_GL/src/loader/tetLoader.cpp" "E:/GitHub/FEM_GL/cmake-build-debug/CMakeFiles/fem.dir/src/loader/tetLoader.cpp.obj"
-  "E:/GitHub/FEM_GL/src/main.cpp" "E:/GitHub/FEM_GL/cmake-build-debug/CMakeFiles/fem.dir/src/main.cpp.obj"
-  "E:/GitHub/FEM_GL/src/render/glfwWindow.cpp" "E:/GitHub/FEM_GL/cmake-build-debug/CMakeFiles/fem.dir/src/render/glfwWindow.cpp.obj"
-  "E:/GitHub/FEM_GL/src/stb_image.cpp" "E:/GitHub/FEM_GL/cmake-build-debug/CMakeFiles/fem.dir/src/stb_image.cpp.obj"
-  )
-set(CMAKE_CXX_COMPILER_ID "MSVC")
-
-# The include file search paths:
-set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "../external/eigen"
-  "../external/glfw-3.3.6/deps"
-  "../external/glm-0.9.9.8"
-  "../external/glad/include"
-  "../external/glfw-3.3.6/include"
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "E:/Github/FEM_GL/external/glad/src/glad.c" "CMakeFiles/fem.dir/external/glad/src/glad.c.obj" "msvc" "CMakeFiles/fem.dir/external/glad/src/glad.c.obj.d"
+  "E:/Github/FEM_GL/external/glfw-3.3.6/deps/getopt.c" "CMakeFiles/fem.dir/external/glfw-3.3.6/deps/getopt.c.obj" "msvc" "CMakeFiles/fem.dir/external/glfw-3.3.6/deps/getopt.c.obj.d"
+  "E:/Github/FEM_GL/external/glfw-3.3.6/deps/tinycthread.c" "CMakeFiles/fem.dir/external/glfw-3.3.6/deps/tinycthread.c.obj" "msvc" "CMakeFiles/fem.dir/external/glfw-3.3.6/deps/tinycthread.c.obj.d"
+  "E:/Github/FEM_GL/src/cubegen/obj.cpp" "CMakeFiles/fem.dir/src/cubegen/obj.cpp.obj" "msvc" "CMakeFiles/fem.dir/src/cubegen/obj.cpp.obj.d"
+  "E:/Github/FEM_GL/src/loader/tetLoader.cpp" "CMakeFiles/fem.dir/src/loader/tetLoader.cpp.obj" "msvc" "CMakeFiles/fem.dir/src/loader/tetLoader.cpp.obj.d"
+  "E:/Github/FEM_GL/src/main.cpp" "CMakeFiles/fem.dir/src/main.cpp.obj" "msvc" "CMakeFiles/fem.dir/src/main.cpp.obj.d"
+  "E:/Github/FEM_GL/src/render/glfwWindow.cpp" "CMakeFiles/fem.dir/src/render/glfwWindow.cpp.obj" "msvc" "CMakeFiles/fem.dir/src/render/glfwWindow.cpp.obj.d"
+  "E:/Github/FEM_GL/src/stb_image.cpp" "CMakeFiles/fem.dir/src/stb_image.cpp.obj" "msvc" "CMakeFiles/fem.dir/src/stb_image.cpp.obj.d"
   )
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "E:/GitHub/FEM_GL/cmake-build-debug/REQUIRED/src/CMakeFiles/glfw.dir/DependInfo.cmake"
+  "E:/Github/FEM_GL/cmake-build-debug/REQUIRED/src/CMakeFiles/glfw.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

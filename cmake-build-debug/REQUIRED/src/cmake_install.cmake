@@ -1,4 +1,4 @@
-# Install script for directory: E:/GitHub/FEM_GL/external/glfw-3.3.6/src
+# Install script for directory: E:/Github/FEM_GL/external/glfw-3.3.6/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -33,6 +33,6 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "E:/GitHub/FEM_GL/cmake-build-debug/REQUIRED/src/glfw3.lib")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "E:/Github/FEM_GL/cmake-build-debug/REQUIRED/src/glfw3.lib")
 endif()
 
