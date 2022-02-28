@@ -29,12 +29,14 @@ std::string n[9] = {
 
 void tetLoader::initLoader(){
     this -> header = path +  name + ".1.";
-
-    for(int i = 0; i < (isSubFaceLoad ? 9:3) ; i++){
+    this -> num.resize(3 + subFaceNum);
+    for(int i = 0; i < num.size(); i++){
         std::ifstream tmp(this -> header + n[i]);
-        if(!tmp.is_open())
+        if(!tmp.is_open()){
+            std::cout << "Not Find " << N[i] << " File" <<std::endl;
             continue;
-        std::cout << "Find " << N[i] << "File" << std::endl;
+        }
+        std::cout << "Find " << N[i] << " File" << std::endl;
         tmp >> this->num[i];
         tmp.close();
     }
@@ -55,7 +57,7 @@ bool tetLoader::loadFace(){
         int s = 0;
         while (file >> tmp) {
             if (s % 4)
-                Face->push_back(tmp);
+                Face->push_back(tmp-1);
 
             ++s;
         }
@@ -105,7 +107,7 @@ bool tetLoader::loadElement(){
         int s = 0;
         while (file >> tmp) {
             if (s % 5)
-                Element->push_back(tmp);
+                Element->push_back(tmp-1);
 
             ++s;
         }
@@ -121,18 +123,18 @@ bool tetLoader::loadAll(){
     res &= this ->loadFace() ;
     res &= this->loadElement();
     if(isSubFaceLoad)
-        for (int i = 3; i<9 ;i++)
+        for (int i = 3; i < num.size() ;i++)
             res &= this->loadSubFace(n[i]);
     return res;
 }
 
 bool tetLoader::loadSubFace(std::string target){
     int file_index = -1;
-    for(int i = 3;i<9;i++)
+    for(int i = 3;i < num.size();i++)
         if(n[i] == target || N[i] == target)
             file_index = i;
-    // (file_index : 3-8)
-    if(file_index >= 0 && num[file_index] != 0)
+    // (file_index :-1 / 3-8)
+    if(file_index > 0 && num[file_index] != 0)
     {
         std::ifstream file;
         std::string path_ = this -> header + n[file_index];
@@ -143,11 +145,11 @@ bool tetLoader::loadSubFace(std::string target){
         else{
             int tmp;
             file >> tmp, file >> tmp;
-            subFace[file_index-3]->reserve(num[file_index] * 3);
+            subFace-> at(file_index-3)->reserve(num[file_index] * 3);
             int s = 0;
             while(file>>tmp){
                 if(s%4)
-                    subFace[file_index-3]->push_back(tmp);
+                    subFace->at(file_index-3)->push_back(tmp-1);
                 ++s;
             }
             file.close();

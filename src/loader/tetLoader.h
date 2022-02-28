@@ -34,6 +34,18 @@ public:
         isSubFaceLoad = false;
         this -> initLoader();
     };
+    tetLoader(std:: string _path,
+              std:: string _name,
+              std::vector<float>* _Vertex,
+              std::vector<int>* _Face,
+              std::vector<int>* _Element,
+              std::vector<std::vector<int> *>* _Boundary
+    ) : path(_path), name(_name), Vertex(_Vertex), Face(_Face), Element(_Element), subFace(_Boundary){
+        this -> isSubFaceLoad = true;
+        this -> subFaceNum = subFace->size();
+        this -> initLoader();
+        std::cout << "isSubFaceLoad On" << std::endl;
+    };
 
     ~tetLoader() = default;
 
@@ -58,7 +70,7 @@ public:
     }
 
     int getSubFaceNum(std::string target){
-        for(int i = 3;i<9;i++)
+        for(int i = 3;i < subFaceNum + 3;i++)
         {
             if(target == n[i] || target == N[i])
                 return num[i];
@@ -70,11 +82,12 @@ private:
     std::string path;
     std::string name;
     std::string header;
-    int num[9];
+    std::vector<int> num;
+    unsigned int subFaceNum = 0;
     bool isSubFaceLoad  =  false;
     std::vector<float>* Vertex;
     std::vector<int>* Face, * Element;
-    std::vector<int>* subFace[6];
+    std::vector<std::vector<int>*>* subFace;
 
     void initLoader();
 };

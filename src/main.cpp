@@ -5,39 +5,60 @@
 #include "loader/tetLoader.h"
 #include "render/glfwWindow.h"
 #include "cubegen/obj.h"
+#include"FEMengine.h"
 
 // settings
 const unsigned int SCR_WIDTH = 1200;
 const unsigned int SCR_HEIGHT = 900;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 1.0f, 7.0f));
+float globalScaler = 10;
 
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 std::vector<float> ver;
 std::vector<int> face, ele;
+std::vector<int> sub[6];
+std::vector<std::vector<int>*> boundary;
+
 int main()
 {
-//    generate cube mesh
-//    cube c = cube(1,1,1,1,1,1,0,0,0);
+//    //generate cube mesh
+//    auto c = cube(10,10,10,1,1,1,-5,-5,10);
 //    c.fileroot("../reference/");
-//    c.print_all();
+//       c.print_all();
 
 //load
-    tetLoader t("../reference/" ,"bar111", &ver, &face, &ele);
+    for(auto & i : sub){
+        boundary.emplace_back(&i);
+    }
+
+    tetLoader t("../reference/" ,"bar101050", &ver, &face, &ele,&boundary);
     t.loadAll();
     t.dump();
 
 
+    camera.MovementSpeed /= 2 ;
+
     glfwWindow window = glfwWindow(SCR_WIDTH, SCR_HEIGHT, "FEM_GL");
     window.glfwWindowInit();
 
-
+//    //creat FEM engine
+    auto fem = FEMengine(&ver, &face, &ele,&boundary);
+    fem.setE(10000);
+    fem.setG(20);
+    fem.addRotateList(boundary.at(1),0,1,0,0,0,0);
+    fem.addRotateList(boundary.at(0),0,-1,0,0,0,0);
+//fem.addVelocityList(boundary.at(4),5,0,0);
+//fem.addVelocityList(boundary.at(5),-5,0,0);
+    fem.setDamping(0.999);
+    fem.setDt(3*1e-3);
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
+
 
     // build and compile our shader zprogram
     // ------------------------------------
@@ -45,46 +66,10 @@ int main()
     const char* f = "../src/shader/camera.fs";
     Shader ourShader(v, f);
 
-    // set up vertex data (and buffer(s)) and configure vertex attributes
-    // ------------------------------------------------------------------
-    float vertices[] = {
-            0.000000f,	0.000000f,	0.000000f,
-            	0.000000f,	0.000000f,	1.000000f,
-            	1.000000f,	0.000000f,	1.000000f,
-            	1.000000f,	0.000000f,	0.000000f,
-            	0.000000f,	1.000000f,	0.000000f,
-            	0.000000f,	1.000000f,	1.000000f,
-            	1.000000f,	1.000000f,	1.000000f,
-            	1.000000f,	1.000000f,	0.000000f,
-            };
-
-    unsigned int indices[] = {
-            5,6,8,6,8,1,8,1,5,1,5,6,
-            	//5	6	8	1
-
-                6,7,8,7,8,1,8,1,6,1,6,7,
-            	//6	7	8	1
-
-                6,2,3,2,3,1,3,1,6,1,6,2,
-            	//6	2	3	1
-
-                6,3,7,3,7,1,7,1,6,1,6,3,
-            	//6	3	7	1
-
-                7,3,8,3,8,1,8,1,7,1,7,3,
-            	//7	3	8	1
-
-                3,4,8,4,8,1,8,1,3,1,3,4
-            	//3	4	8	1
-
-    };
-
-    for(unsigned int & indice : indices)
-        --indice;
 
     // world space positions of our cubes
     glm::vec3 cubePositions[] = {
-            glm::vec3( 0.0f,  -1.0f,  0.0f),
+            glm::vec3( 0.0f,  0.0f,  0.0f),
     };
 
     unsigned int VBO, VAO, EBO;
@@ -95,11 +80,11 @@ int main()
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, ver.size()*sizeof(float), &(ver[0]), GL_DYNAMIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, face.size() * sizeof(int), &face[0], GL_STATIC_DRAW);
+
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -116,18 +101,20 @@ int main()
         lastFrame = currentFrame;
 
         // dynamic for the coordinate of object
-        vertices[0] = (rand()%2) * 0.5f;
+        fem.timeIntegrate();
+
         //rebind data buffer
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, ver.size() * sizeof(float)  , &ver[0], GL_DYNAMIC_DRAW);
 
         // input process for glfwWindow
         // -----
-        window.loop();
+        window.input();
 
         // render
         // ------
         glClearColor(0.0f, 0.3f, 0.3f, 0.5f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 
         // activate shader
@@ -148,18 +135,20 @@ int main()
 
             // calculate the model matrix for each object and pass it to shader before drawing
             glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+            glm::vec3 s = glm::vec3(1/globalScaler);
             model = glm::translate(model, cubePositions[i]);
-            float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            model = glm::scale(model,s);
             ourShader.setMat4("model", model);
 
-            glDrawElements(GL_TRIANGLES, 72, GL_UNSIGNED_INT, nullptr);
+
+            glDrawElements(GL_TRIANGLES, face.size(), GL_UNSIGNED_INT, nullptr);
+
         }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
-        glfwSwapBuffers(window.getWindow());
-        glfwPollEvents();
+         window.display();
+         window.pollEvent();
     }
 
     // optional: de-allocate all resources once they've outlived their purpose:

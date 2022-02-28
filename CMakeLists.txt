@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 project(FEM)
 set(CMAKE_CXX_STANDARD 14)
 set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external/)
-
+# change Clion memory
+MATH(EXPR stack_size "16*1024*1024*1024")
+set(CMAKE_EXE_LINKER_FLAGS "-Wl,--stack,${stack_size}")
 #GLFW additions
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -26,7 +28,7 @@ aux_source_directory(./src SOURCE)
 aux_source_directory(./src/render RENDER)
 aux_source_directory(./src/loader LOADER)
 aux_source_directory(./src/cubegen CUBE)
-set (SRC "${SOURCE}" "${RENDER}" "${LOADER}" "${CUBE}")
+set (SRC "${SOURCE}" "${RENDER}" "${LOADER}" "${CUBE}" src/FEMengine.cpp src/FEMengine.h)
 
 
 #add project built dependence

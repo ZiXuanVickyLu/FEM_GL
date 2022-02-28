@@ -27,13 +27,16 @@ public:
 
     bool glfwWindowInit();
 
-    void loop();
+    void input();
+    void display();
+    void pollEvent();
 
     GLFWwindow* getWindow(){
         return window;
     }
     unsigned int getWidth() { return SCR_WIDTH; }
     unsigned int getHeight() { return SCR_HEIGHT; }
+
 private:
     const unsigned int SCR_WIDTH = 1200;
     const unsigned int SCR_HEIGHT = 900;

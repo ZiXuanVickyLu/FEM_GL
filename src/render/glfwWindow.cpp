@@ -65,8 +65,15 @@ glfwWindow::~glfwWindow(){
     // ------------------------------------------------------------------
     glfwTerminate();
 }
+void glfwWindow::display(){
+    glfwSwapBuffers(window);
 
-void glfwWindow::loop(){
+}
+void glfwWindow::pollEvent(){
+    glfwPollEvents();
+}
+
+void glfwWindow::input(){
     processInput(window);
 }
 
@@ -85,6 +92,14 @@ void glfwWindow::processInput(GLFWwindow *window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        camera.ProcessKeyboard(UP, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        camera.ProcessKeyboard(DOWN, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        camera.MovementSpeed += 0.005f;
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        camera.MovementSpeed -= 0.005f;
     if(glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
         rotateOn = true;
 }
