@@ -3,8 +3,7 @@ project(FEM)
 set(CMAKE_CXX_STANDARD 14)
 set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external/)
 # change Clion memory
-MATH(EXPR stack_size "16*1024*1024*1024")
-set(CMAKE_EXE_LINKER_FLAGS "-Wl,--stack,${stack_size}")
+
 #GLFW additions
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -22,17 +21,19 @@ set(GETOPT "${GLFW_SOURCE_DIR}/deps/getopt.h"
 set(TINYCTHREAD "${GLFW_SOURCE_DIR}/deps/tinycthread.h"
         "${GLFW_SOURCE_DIR}/deps/tinycthread.c")
 
-#add source to application
+#add ply exporter/loader
+set(PLY "${THIRD_PARTY_DIR}/plycpp/plycpp.cpp")
 
+#add source to application
 aux_source_directory(./src SOURCE)
 aux_source_directory(./src/render RENDER)
 aux_source_directory(./src/loader LOADER)
 aux_source_directory(./src/cubegen CUBE)
-set (SRC "${SOURCE}" "${RENDER}" "${LOADER}" "${CUBE}" src/FEMengine.cpp src/FEMengine.h)
+set (SRC "${SOURCE}" "${RENDER}" "${LOADER}" "${CUBE}" src/FEMengine.cpp src/FEMengine.h src/loader/plyEasyLoader.cpp src/loader/plyEasyLoader.h)
 
 
 #add project built dependence
-add_executable(fem ${SRC} ${GLAD} ${GETOPT} ${TINYCTHREAD})
+add_executable(fem ${SRC} ${GLAD} ${GETOPT} ${TINYCTHREAD} ${PLY})
 
 #link glfw library(libglfw3.a) built from source
 target_link_libraries(fem glfw ${GLFW_LIBRARIES})
@@ -42,4 +43,5 @@ target_include_directories(fem PUBLIC
         "${THIRD_PARTY_DIR}/glfw-3.3.6/deps"
         "${THIRD_PARTY_DIR}/glm-0.9.9.8"
         "${THIRD_PARTY_DIR}/glad/include"
+	  	"${THIRD_PARTY_DIR}/plycpp"
         )

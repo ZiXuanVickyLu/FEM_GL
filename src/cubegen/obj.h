@@ -11,7 +11,8 @@
 #include <stdio.h>
 #include <cstdlib>
 
-extern uint16_t vetex[200][200][200][9];
+extern uint32_t
+ vetex[200][200][200][9];
 
 class dim3{
 public:
@@ -71,7 +72,8 @@ public:
 
         return ans;
     }
-    uint16_t getVetex(int lenId, int widId, int heiId, int cubConer){
+    uint32_t
+ getVetex(int lenId, int widId, int heiId, int cubConer){
         return vetex[lenId][widId][heiId][cubConer];
     }
     bool print_vetex();

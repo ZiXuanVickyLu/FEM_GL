@@ -5,7 +5,8 @@
 #include "obj.h"
 #include <iostream>
 
-uint16_t vetex[200][200][200][9];
+uint32_t
+ vetex[200][200][200][9];
 
 inline int adjust(int h, int w, int le){
     if(h!=1 && w!=1 && le!=1)
@@ -181,8 +182,7 @@ bool cube::print_vetex(){
                         fprintf(f,"\t%d\t%f\t%f\t%f\n",vetex[le][w][h][7],this->getPos(le,w,h,7).len,
                                 this->getPos(le,w,h,7).hei,this->getPos(le,w,h,7).wid);
                         break;
-                    case 4:
-                        fprintf(f,"\t%d\t%f\t%f\t%f\n",vetex[le][w][h][3],this->getPos(le,w,h,3).len,
+                    case 4:                        fprintf(f,"\t%d\t%f\t%f\t%f\n",vetex[le][w][h][3],this->getPos(le,w,h,3).len,
                                 this->getPos(le,w,h,3).hei,this->getPos(le,w,h,3).wid);
                         fprintf(f,"\t%d\t%f\t%f\t%f\n",vetex[le][w][h][7],this->getPos(le,w,h,7).len,
                                 this->getPos(le,w,h,7).hei,this->getPos(le,w,h,7).wid);

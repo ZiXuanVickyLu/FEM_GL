@@ -81,9 +81,11 @@ void FEMengine::computeForce(){
 inline void FEMengine::assignBoundary(bL Ele, vector<float>* data){
 
     for(auto ele: *(Ele.subFace)) {
-        data->at(ele * 3 + 0) = Ele.data[0];
-        data->at(ele * 3 + 1) = Ele.data[1];
-        data->at(ele * 3 + 2) = Ele.data[2];
+        if (ele >-1) {
+            data->at(ele * 3 + 0) = Ele.data[0];
+            data->at(ele * 3 + 1) = Ele.data[1];
+            data->at(ele * 3 + 2) = Ele.data[2];
+        }
     }
 
 }
@@ -93,11 +95,13 @@ void FEMengine::assignRotationBoundary(rL Ele, vector<float> *data){
     center << Ele.center[0], Ele.center[1], Ele.center[2];
 
     for(auto ele: *(Ele.subFace)) {
-       a =  node(ele);
-       a -= center;
-       res = a.cross(norm);
-       for(int j = 0;j<3;j++)
-           data ->at(ele * 3 + j) = res(j);
+        if(ele > -1){
+            a =  node(ele);
+            a -= center;
+            res = a.cross(norm);
+            for(int j = 0;j<3;j++)
+                data ->at(ele * 3 + j) = res(j);
+        }
     }
 }
 

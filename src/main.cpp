@@ -6,14 +6,14 @@
 #include "render/glfwWindow.h"
 #include "cubegen/obj.h"
 #include"FEMengine.h"
-
+#include"loader/plyEasyLoader.h"
 // settings
 const unsigned int SCR_WIDTH = 1200;
 const unsigned int SCR_HEIGHT = 900;
 
 // camera
-Camera camera(glm::vec3(0.0f, 1.0f, 7.0f));
-float globalScaler = 10;
+Camera camera(glm::vec3(0.0f, 1.0/20, 5.0f));
+float globalScaler = 20;
 
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
@@ -26,7 +26,7 @@ std::vector<std::vector<int>*> boundary;
 int main()
 {
 //    //generate cube mesh
-//    auto c = cube(10,10,10,1,1,1,-5,-5,10);
+//    auto c = cube(20,20,2,1,1,1,-10,-10,0);
 //    c.fileroot("../reference/");
 //       c.print_all();
 
@@ -35,10 +35,11 @@ int main()
         boundary.emplace_back(&i);
     }
 
-    tetLoader t("../reference/" ,"bar101050", &ver, &face, &ele,&boundary);
+    tetLoader t("../reference/" ,"bar101010", &ver, &face, &ele,&boundary);
     t.loadAll();
     t.dump();
 
+    auto frameLoader = plyEasyLoader(&ver, &face, "cube");
 
     camera.MovementSpeed /= 2 ;
 
@@ -47,14 +48,19 @@ int main()
 
 //    //creat FEM engine
     auto fem = FEMengine(&ver, &face, &ele,&boundary);
-    fem.setE(10000);
-    fem.setG(20);
-    fem.addRotateList(boundary.at(1),0,1,0,0,0,0);
-    fem.addRotateList(boundary.at(0),0,-1,0,0,0,0);
-//fem.addVelocityList(boundary.at(4),5,0,0);
-//fem.addVelocityList(boundary.at(5),-5,0,0);
+    fem.setE(200);
+    fem.setG(10);
+    fem.setNu(0.48);
+    fem.setFloor(-1);
+//    fem.addRotateList(boundary.at(1),0,1,0,0,0,0);
+//    fem.addRotateList(boundary.at(0),0,-1,0,0,0,0);
+//    fem.addRotateList(boundary.at(4),0,1,0,0,1,0);
+//    fem.addRotateList(boundary.at(3),0,1,0,0,1,0); //front
+//    fem.addRotateList(boundary.at(2),0,1,0,0,1,0);
+//    fem.addRotateList(boundary.at(5),0,1,0,0,1,0);
     fem.setDamping(0.999);
-    fem.setDt(3*1e-3);
+    fem.setDt(2*1e-3);
+   // fem.setG(1);
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
@@ -102,6 +108,7 @@ int main()
 
         // dynamic for the coordinate of object
         fem.timeIntegrate();
+        frameLoader.genFrame();
 
         //rebind data buffer
         glBufferData(GL_ARRAY_BUFFER, ver.size() * sizeof(float)  , &ver[0], GL_DYNAMIC_DRAW);
