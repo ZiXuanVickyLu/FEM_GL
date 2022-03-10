@@ -24,9 +24,9 @@ bool plyEasyLoader::genFrame(){
     now << "end_header"<<endl;
     for(int i = 0; i < verNum; i++){
         now
-        << verData->at(i * 3 + 0) << " "
-        << verData->at(i * 3 + 1) << " "
-        << verData->at(i * 3 + 2) << endl;
+        << verData->at(i * 6 + 0) << " "
+        << verData->at(i * 6 + 1) << " "
+        << verData->at(i * 6 + 2) << endl;
     }
     for(int i = 0; i < faceNum;i++){
         now << "3 "

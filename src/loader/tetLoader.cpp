@@ -78,12 +78,18 @@ bool tetLoader::loadVertex(){
         int tmp;
         file >> tmp, file >> tmp, file >> tmp, file >> tmp;
         float t;
-        Vertex->reserve(num[0] * 3);
+        Vertex->reserve(num[0] * 6);
         int s = 0;
+        int tri = 0;
         while (file >> t) {
-            if (s % 4)
+            if (s % 4) {
                 Vertex->push_back(t);
-
+                ++ tri;
+                if(tri % 3 == 0)
+                    Vertex->push_back(0.0f),
+                    Vertex->push_back(0.0f),
+                    Vertex->push_back(1.0f);
+            }
             ++s;
         }
         file.close();

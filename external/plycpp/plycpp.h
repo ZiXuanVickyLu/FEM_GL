@@ -51,7 +51,7 @@ namespace plycpp
 	{
 	public:
 		Exception(const std::string& msg)
-			: exception(msg.c_str())
+			: exception()
 		{}
 	};
 

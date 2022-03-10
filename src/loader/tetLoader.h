@@ -9,6 +9,7 @@
 #include<vector>
 #include<fstream>
 #include <iostream>
+
 extern std::string n[],N[];
 
 class tetLoader {

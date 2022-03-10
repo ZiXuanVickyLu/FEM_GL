@@ -1,11 +1,13 @@
-#include<iostream>
 #include "render/Camera.h"
 #include "render/shader_m.h"
+
 //#include "stb_image.h"
 #include "loader/tetLoader.h"
+#include "imgui_impl_glfw.h"
 #include "render/glfwWindow.h"
+#include "imgui_impl_opengl3.h"
 #include "cubegen/obj.h"
-#include"FEMengine.h"
+#include"FEM/FEMengine.h"
 #include"loader/plyEasyLoader.h"
 // settings
 const unsigned int SCR_WIDTH = 1200;
@@ -13,11 +15,13 @@ const unsigned int SCR_HEIGHT = 900;
 
 // camera
 Camera camera(glm::vec3(0.0f, 1.0/20, 5.0f));
-float globalScaler = 20;
+float globalScaler = 30;
 
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
+
+//geometry data structure
 std::vector<float> ver;
 std::vector<int> face, ele;
 std::vector<int> sub[6];
@@ -26,19 +30,20 @@ std::vector<std::vector<int>*> boundary;
 int main()
 {
 //    //generate cube mesh
-//    auto c = cube(20,20,2,1,1,1,-10,-10,0);
+//    auto c = cube(30,30,30,1,1,1,-15,-15,7);
 //    c.fileroot("../reference/");
 //       c.print_all();
 
-//load
+//load mesh
     for(auto & i : sub){
         boundary.emplace_back(&i);
     }
 
-    tetLoader t("../reference/" ,"bar101010", &ver, &face, &ele,&boundary);
+    tetLoader t("../reference/" ,"bar303030", &ver, &face, &ele,&boundary);
     t.loadAll();
     t.dump();
 
+// set ply exporter
     auto frameLoader = plyEasyLoader(&ver, &face, "cube");
 
     camera.MovementSpeed /= 2 ;
@@ -48,10 +53,10 @@ int main()
 
 //    //creat FEM engine
     auto fem = FEMengine(&ver, &face, &ele,&boundary);
-    fem.setE(200);
+    fem.setE(10000);
     fem.setG(10);
-    fem.setNu(0.48);
-    fem.setFloor(-1);
+    fem.setNu(0);
+    fem.setFloor(-15);
 //    fem.addRotateList(boundary.at(1),0,1,0,0,0,0);
 //    fem.addRotateList(boundary.at(0),0,-1,0,0,0,0);
 //    fem.addRotateList(boundary.at(4),0,1,0,0,1,0);
@@ -59,17 +64,31 @@ int main()
 //    fem.addRotateList(boundary.at(2),0,1,0,0,1,0);
 //    fem.addRotateList(boundary.at(5),0,1,0,0,1,0);
     fem.setDamping(0.999);
-    fem.setDt(2*1e-3);
-   // fem.setG(1);
+    fem.setColorLessLarge(0,25);
+    fem.setDt(1e-3);
+    fem.setG(20);
+    fem.setColorMode(VELOCITY_Z);
+//    fem.addVelocityList(boundary.at(4),1,0,0);
+//    fem.addVelocityList(boundary.at(5),-1,0,0);
+
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
+    //imgui
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
+    // Setup Platform/Renderer bindings
+    ImGui_ImplGlfw_InitForOpenGL(window.getWindow(), true);
+    ImGui_ImplOpenGL3_Init();
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
 
     // build and compile our shader zprogram
     // ------------------------------------
-    const char* v = "../src/shader/camera.vs";
-    const char* f = "../src/shader/camera.fs";
+    const char* v = "../src/shader/cameraColor.vs";
+    const char* f = "../src/shader/cameraColor.fs";
     Shader ourShader(v, f);
 
 
@@ -82,7 +101,6 @@ int main()
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
-
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -92,25 +110,40 @@ int main()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, face.size() * sizeof(int), &face[0], GL_STATIC_DRAW);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
-
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window.getWindow()))
     {
+        //imgui
+        // feed inputs to dear imgui, start new frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
         // per-frame time logic
         // --------------------
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
+        std::cout << 1/deltaTime << endl;
+
         // dynamic for the coordinate of object
         fem.timeIntegrate();
-        frameLoader.genFrame();
+        //frameLoader.genFrame();
+
+        // render your GUI
+        ImGui::Begin("Demo window");
+        ImGui::Button("Hello!");
+        ImGui::End();
+
 
         //rebind data buffer
+        //position
         glBufferData(GL_ARRAY_BUFFER, ver.size() * sizeof(float)  , &ver[0], GL_DYNAMIC_DRAW);
 
         // input process for glfwWindow
@@ -119,9 +152,9 @@ int main()
 
         // render
         // ------
-        glClearColor(0.0f, 0.3f, 0.3f, 0.5f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_POLYGON);
 
 
         // activate shader
@@ -154,6 +187,9 @@ int main()
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
          window.display();
          window.pollEvent();
     }
@@ -164,8 +200,13 @@ int main()
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
 
+    //imgui
+
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     return 0;
 
 }//end main
+
 
 
