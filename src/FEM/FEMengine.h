@@ -257,6 +257,7 @@ private:
     static inline void assignBoundary(bL Ele, vector<float>* data);
     inline void assignColor(long int vn, Eigen::Vector3f color);
     inline float calcColorMap(long int vn);
+    void smooth(long int v1, long int v2, long int v3);
 
 };
 #endif //FEM_FEMENGINE_H

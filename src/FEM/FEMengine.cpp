@@ -204,6 +204,23 @@ void FEMengine::handleVelocity(){
 
 }
 
+void FEMengine::smooth(long int v1, long int v2, long int v3){
+    float c[3];
+
+for(int i = 0; i < 3; i++){
+    c[i] = (Vertex -> at(v1 * 6 + 3 + i) +
+            Vertex -> at(v2 * 6 + 3 + i) +
+            Vertex -> at(v3 * 6 + 3 + i)) / 3;
+    this -> Vertex -> at(v1 * 6 + 3 + i) = c[i];
+    this -> Vertex -> at(v2 * 6 + 3 + i) = c[i];
+    this -> Vertex -> at(v3 * 6 + 3 + i) = c[i];
+    this -> color[ v1 * 3 + i] = c[i];
+    this -> color[ v2 * 3 + i] = c[i];
+    this -> color[ v3 * 3 + i] = c[i];
+ }
+
+}
+
 void FEMengine::timeIntegrate(){
     this -> computeForce(); //force boundary assignment
     handleForce();
@@ -234,6 +251,15 @@ void FEMengine::timeIntegrate(){
             auto tmp = calcColorMap(vn);
             auto colorVector = colorMap(tmp);
             assignColor(vn, colorVector);
+//
+        }
+    }
+    if(!(runtime % colorFrequent)) {
+        for (int fn = 0; fn < FaceNum; fn++) {
+            auto v1 = Face->at(fn * 3 + 0);
+            auto v2 = Face->at(fn * 3 + 1);
+            auto v3 = Face->at(fn * 3 + 2);
+            this->smooth(v1, v2, v3);
         }
     }
     handlePosition(); // vertex position boundary assignment

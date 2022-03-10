@@ -27,6 +27,7 @@ std::vector<int> face, ele;
 std::vector<int> sub[6];
 std::vector<std::vector<int>*> boundary;
 
+
 int main()
 {
 //    //generate cube mesh
@@ -41,7 +42,7 @@ int main()
 
     tetLoader t("../reference/" ,"bar303030", &ver, &face, &ele,&boundary);
     t.loadAll();
-    t.dump();
+
 
 // set ply exporter
     auto frameLoader = plyEasyLoader(&ver, &face, "cube");
@@ -55,7 +56,7 @@ int main()
     auto fem = FEMengine(&ver, &face, &ele,&boundary);
     fem.setE(10000);
     fem.setG(10);
-    fem.setNu(0);
+    fem.setNu(0.3);
     fem.setFloor(-15);
 //    fem.addRotateList(boundary.at(1),0,1,0,0,0,0);
 //    fem.addRotateList(boundary.at(0),0,-1,0,0,0,0);
@@ -64,10 +65,10 @@ int main()
 //    fem.addRotateList(boundary.at(2),0,1,0,0,1,0);
 //    fem.addRotateList(boundary.at(5),0,1,0,0,1,0);
     fem.setDamping(0.999);
-    fem.setColorLessLarge(0,25);
-    fem.setDt(1e-3);
+    fem.setColorLessLarge(0,20);
+    fem.setDt( 3 * 1e-3);
     fem.setG(20);
-    fem.setColorMode(VELOCITY_Z);
+    fem.setColorMode(VELOCITY_X);
 //    fem.addVelocityList(boundary.at(4),1,0,0);
 //    fem.addVelocityList(boundary.at(5),-1,0,0);
 
@@ -131,14 +132,18 @@ int main()
         lastFrame = currentFrame;
 
         std::cout << 1/deltaTime << endl;
+        std::string s = std::to_string(1/deltaTime);
+        s += " fps ";
+        glfwSetWindowTitle(window.getWindow(),(char *)s.c_str());
 
         // dynamic for the coordinate of object
         fem.timeIntegrate();
         //frameLoader.genFrame();
 
         // render your GUI
-        ImGui::Begin("Demo window");
-        ImGui::Button("Hello!");
+        t.dumpScreen();
+        ImGui::Begin("Simulation Statistic");
+        ImGui::Text("Color Mode");
         ImGui::End();
 
 

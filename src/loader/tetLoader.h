@@ -9,6 +9,7 @@
 #include<vector>
 #include<fstream>
 #include <iostream>
+#include "imgui.h"
 
 extern std::string n[],N[];
 
@@ -57,7 +58,7 @@ public:
     bool loadSubFace(std::string target);
     bool loadAll();
 
-    void dump();
+    void dumpScreen();
 
 
     int getVertexNum(){

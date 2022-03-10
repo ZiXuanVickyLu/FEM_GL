@@ -167,23 +167,24 @@ bool tetLoader::loadSubFace(std::string target){
     return false;
 }
 
-void tetLoader::dump(){
+void tetLoader::dumpScreen(){
 
-    std::cout<< "======= tetLoader dump ======"<<std::endl;
-    std::cout<< "Vertex Number: "<< num[0] << std::endl;
-    std::cout<< "Face Number: "<< num[1] << std::endl;
-    std::cout<< "Element Number: "<< num[2] << std::endl;
-    if (isSubFaceLoad){
-        std::cout<< "Down Face Number: "<< num[3] << std::endl;
-        std::cout<< "Top Face Number: "<< num[4] << std::endl;
-        std::cout<< "Front Face Number: "<< num[5] << std::endl;
-        std::cout<< "Back Face Number: "<< num[6] << std::endl;
-        std::cout<< "Left Face Number: "<< num[8] << std::endl;
-        std::cout<< "Right Face Number: " << num[7] << std::endl;
-    }
-    else
-        std::cout<< "Sub Face unloaded." << std::endl;
+    std::string s  = "==== tetLoader dump ====\n";
+    s += ("Vertex Number: " + std::to_string(num[0]) + "\n"
+     + "Face Number: " + std::to_string( num[1] ) + "\n"
+     + "Element Number: "+ std::to_string(num[2]) + "\n" );
+    if(isSubFaceLoad){
+        s +=  ("Down Face Number: " + std::to_string(num[3]) + "\n" +
+         "Top Face Number: " + std::to_string( num[4]) + "\n" +
+         "Front Face Number: " + std::to_string (num[5]) + "\n" +
+         "Back Face Number: " + std::to_string( num[6])  + "\n" +
+         "Left Face Number: " + std::to_string( num[8]) + "\n" +
+         "Right Face Number: " + std::to_string( num[7]) + "\n");
+    } else
+        s += "Sub Face unloaded. \n";
 
-    std::cout<< "======= tetLoader dump ======"<<std::endl;
+    ImGui::Begin("Geometry Statistic");
+    ImGui::Text( "%s", (char *)s.c_str());
+    ImGui::End();
 }
 
