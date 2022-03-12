@@ -5,7 +5,7 @@
 #include "FEMengine.h"
 inline Eigen::Vector3f FEMengine::colorMap(float num){
     typedef Eigen::Vector3f v3f;
-float index = num / (this -> colorLarge - this -> colorLess) * 600;
+float index = (num > colorLarge ? colorLarge : num) / (this -> colorLarge - this -> colorLess) * 600;
 v3f ans = index >= 400 ?
         ((index- 400) * v3f(0,-1.0f/200,0) + v3f(1.0f,1.0f,0)) :
         ( index >= 200 ? ((index - 200) * v3f(1.0f/200,0,-1.0f/200) + v3f(0,1.0f,1.0f)) :
@@ -255,12 +255,13 @@ void FEMengine::timeIntegrate(){
         }
     }
     if(!(runtime % colorFrequent)) {
-        for (int fn = 0; fn < FaceNum; fn++) {
-            auto v1 = Face->at(fn * 3 + 0);
-            auto v2 = Face->at(fn * 3 + 1);
-            auto v3 = Face->at(fn * 3 + 2);
-            this->smooth(v1, v2, v3);
-        }
+        for(int i = 0;i<2;i++)
+            for (int fn = 0; fn < FaceNum; fn++) {
+                auto v1 = Face->at(fn * 3 + 0);
+                auto v2 = Face->at(fn * 3 + 1);
+                auto v3 = Face->at(fn * 3 + 2);
+                this->smooth(v1, v2, v3);
+            }
     }
     handlePosition(); // vertex position boundary assignment
     std::cout<<"======= FEMengine dump ======"<< std::endl;

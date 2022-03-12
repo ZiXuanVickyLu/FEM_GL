@@ -10,8 +10,8 @@
 #include"FEM/FEMengine.h"
 #include"loader/plyEasyLoader.h"
 // settings
-const unsigned int SCR_WIDTH = 1200;
-const unsigned int SCR_HEIGHT = 900;
+const unsigned int SCR_WIDTH = 2400;
+const unsigned int SCR_HEIGHT = 1800;
 
 // camera
 Camera camera(glm::vec3(0.0f, 1.0/20, 5.0f));
@@ -27,20 +27,21 @@ std::vector<int> face, ele;
 std::vector<int> sub[6];
 std::vector<std::vector<int>*> boundary;
 
+long unsigned int frame = 0;
 
 int main()
 {
-//    //generate cube mesh
-//    auto c = cube(30,30,30,1,1,1,-15,-15,7);
-//    c.fileroot("../reference/");
-//       c.print_all();
+    //generate cube mesh
+    auto c = cube(6,10,60,1,1,1,-3,-3,0);
+    c.fileroot("../reference/");
+       c.print_all();
 
 //load mesh
     for(auto & i : sub){
         boundary.emplace_back(&i);
     }
 
-    tetLoader t("../reference/" ,"bar303030", &ver, &face, &ele,&boundary);
+    tetLoader t("../reference/" ,"bar6660", &ver, &face, &ele,&boundary);
     t.loadAll();
 
 
@@ -58,17 +59,17 @@ int main()
     fem.setG(10);
     fem.setNu(0.3);
     fem.setFloor(-15);
-//    fem.addRotateList(boundary.at(1),0,1,0,0,0,0);
-//    fem.addRotateList(boundary.at(0),0,-1,0,0,0,0);
+    fem.addRotateList(boundary.at(1),0,1,0,0,0,0);
+    fem.addRotateList(boundary.at(0),0,-1,0,0,0,0);
 //    fem.addRotateList(boundary.at(4),0,1,0,0,1,0);
 //    fem.addRotateList(boundary.at(3),0,1,0,0,1,0); //front
 //    fem.addRotateList(boundary.at(2),0,1,0,0,1,0);
 //    fem.addRotateList(boundary.at(5),0,1,0,0,1,0);
     fem.setDamping(0.999);
-    fem.setColorLessLarge(0,20);
-    fem.setDt( 3 * 1e-3);
-    fem.setG(20);
-    fem.setColorMode(VELOCITY_X);
+    fem.setColorLessLarge(0,600);
+    fem.setDt( 1* 1e-3);
+    fem.setG(0);
+    fem.setColorMode(FORCE_MAGNITUDE);
 //    fem.addVelocityList(boundary.at(4),1,0,0);
 //    fem.addVelocityList(boundary.at(5),-1,0,0);
 
@@ -120,6 +121,7 @@ int main()
     // -----------
     while (!glfwWindowShouldClose(window.getWindow()))
     {
+        ++frame;
         //imgui
         // feed inputs to dear imgui, start new frame
         ImGui_ImplOpenGL3_NewFrame();
@@ -138,7 +140,9 @@ int main()
 
         // dynamic for the coordinate of object
         fem.timeIntegrate();
-        //frameLoader.genFrame();
+
+        //if(frame % 15 == 0)
+            //frameLoader.genFrame();
 
         // render your GUI
         t.dumpScreen();

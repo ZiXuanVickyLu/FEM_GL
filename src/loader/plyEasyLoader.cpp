@@ -18,7 +18,10 @@ bool plyEasyLoader::genFrame(){
     now << "element vertex " << verNum << endl;
     now << "property float x" << endl <<
            "property float y" << endl <<
-           "property float z" << endl;
+           "property float z" << endl <<
+           "property uchar red" << endl <<
+           "property uchar green" << endl <<
+           "property uchar blue" << endl;
     now << "element face " << faceNum << endl;
     now << "property list uchar int vertex_index" << endl;
     now << "end_header"<<endl;
@@ -26,7 +29,10 @@ bool plyEasyLoader::genFrame(){
         now
         << verData->at(i * 6 + 0) << " "
         << verData->at(i * 6 + 1) << " "
-        << verData->at(i * 6 + 2) << endl;
+        << verData->at(i * 6 + 2) << " "
+        << (unsigned int)(255 * verData->at(i * 6 + 3)) << " "
+        << (unsigned int)(255 * verData->at(i * 6 + 4)) << " "
+        << (unsigned int)(255 * verData->at(i * 6 + 5)) << endl;
     }
     for(int i = 0; i < faceNum;i++){
         now << "3 "

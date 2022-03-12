@@ -390,7 +390,7 @@ bool cube::print_boundary(){
         puts("Open file fail!");
         return false;
     }
-    fprintf(fb,"%d   0\n",this -> widN * this -> lenN * 2);
+    fprintf(fb,"%d   0\n",this -> heiN * this -> lenN * 2);
     for(int h = 1; h <= this ->heiN; h++){
         for(int le = 1; le <= this -> lenN; le++){
             this ->fprintf_back_face(h ,1,le,fb,index);
@@ -408,7 +408,7 @@ bool cube::print_boundary(){
         puts("Open file fail!");
         return false;
     }
-    fprintf(ff,"%d   0\n",this -> widN * this -> lenN * 2);
+    fprintf(ff,"%d   0\n",this -> heiN * this -> lenN * 2);
     for(int h = 1; h <= this ->heiN; h++){
         for(int le = 1; le <= this -> lenN; le++){
             this ->fprintf_front_face(h ,this -> widN, le,ff,index);
@@ -426,7 +426,7 @@ bool cube::print_boundary(){
         puts("Open file fail!");
         return false;
     }
-    fprintf(fl,"%d   0\n",this -> widN * this -> lenN * 2);
+    fprintf(fl,"%d   0\n",this -> widN * this -> heiN * 2);
     for(int h = 1; h <= this ->heiN; h++){
         for(int w = 1; w <= this -> widN; w++){
             this ->fprintf_left_face(h ,w,1,fl,index);
@@ -444,7 +444,7 @@ bool cube::print_boundary(){
         puts("Open file fail!");
         return false;
     }
-    fprintf(fr,"%d   0\n",this -> widN * this -> lenN * 2);
+    fprintf(fr,"%d   0\n",this -> widN * this -> heiN * 2);
     for(int h = 1; h <= this ->heiN; h++){
         for(int w = 1; w <= this -> widN; w++){
             this ->fprintf_right_face(h ,w,this -> lenN,fr,index);

@@ -8,6 +8,7 @@
 #include<string>
 #include<vector>
 #include <iostream>
+
 using namespace std;
 class plyEasyLoader {
 public:
@@ -15,7 +16,7 @@ public:
                   string filename, string dir = "../frame/" )
     : verData(_verData), faceIndex(_faceIndex),
     name(filename), root(dir){
-        verNum = verData->size() /3;
+        verNum = verData->size() /6;
         faceNum = faceIndex->size() /3;
     };
     bool genFrame();

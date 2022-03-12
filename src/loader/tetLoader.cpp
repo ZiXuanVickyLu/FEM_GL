@@ -178,8 +178,8 @@ void tetLoader::dumpScreen(){
          "Top Face Number: " + std::to_string( num[4]) + "\n" +
          "Front Face Number: " + std::to_string (num[5]) + "\n" +
          "Back Face Number: " + std::to_string( num[6])  + "\n" +
-         "Left Face Number: " + std::to_string( num[8]) + "\n" +
-         "Right Face Number: " + std::to_string( num[7]) + "\n");
+         "Left Face Number: " + std::to_string( num[7]) + "\n" +
+         "Right Face Number: " + std::to_string( num[8]) + "\n");
     } else
         s += "Sub Face unloaded. \n";
 
