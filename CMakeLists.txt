@@ -51,7 +51,7 @@ aux_source_directory(./src/render RENDER)
 aux_source_directory(./src/loader LOADER)
 aux_source_directory(./src/cubegen CUBE)
 aux_source_directory(./src/FEM FEM)
-set (SRC "${SOURCE}" "${RENDER}" "${LOADER}" "${CUBE}" ${FEM})
+set (SRC "${SOURCE}" "${RENDER}" "${LOADER}" "${CUBE}" ${FEM} src/FEM/neohookean.cpp src/FEM/neohookean.h src/FEM/Constitutive.h)
 
 
 #add project built dependence

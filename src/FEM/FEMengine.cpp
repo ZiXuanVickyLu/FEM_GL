@@ -78,8 +78,7 @@ void FEMengine::init(){
             BoundaryFaceNum.emplace_back(ele->size());
 
     }
-
-    this -> computeMuLa();
+    this ->setConstitutive(NEOHOOKEAN);
     this -> computeB_Volume();
     std::cout<<"======= FEMengine dump ======"<< std::endl;
     std::cout << "Initialized!"<< std::endl;

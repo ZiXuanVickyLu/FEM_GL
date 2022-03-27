@@ -15,7 +15,7 @@ const unsigned int SCR_HEIGHT = 1800;
 
 // camera
 Camera camera(glm::vec3(0.0f, 1.0/20, 5.0f));
-float globalScaler = 30;
+float globalScaler = 50;
 
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
@@ -31,17 +31,17 @@ long unsigned int frame = 0;
 
 int main()
 {
-    //generate cube mesh
-    auto c = cube(6,10,60,1,1,1,-3,-3,0);
-    c.fileroot("../reference/");
-       c.print_all();
+//    //generate cube mesh
+//    auto c = cube(6,10,60,1,1,1,-3,-3,0);
+//    c.fileroot("../reference/");
+//       c.print_all();
 
 //load mesh
     for(auto & i : sub){
         boundary.emplace_back(&i);
     }
 
-    tetLoader t("../reference/" ,"bar6660", &ver, &face, &ele,&boundary);
+    tetLoader t("../reference/" ,"bar101050", &ver, &face, &ele,&boundary);
     t.loadAll();
 
 
@@ -55,10 +55,9 @@ int main()
 
 //    //creat FEM engine
     auto fem = FEMengine(&ver, &face, &ele,&boundary);
-    fem.setE(10000);
     fem.setG(10);
-    fem.setNu(0.3);
-    fem.setFloor(-15);
+    fem.setFloor(-10);
+    fem.setConstitutive(VIRTUAL_FIBER);
     fem.addRotateList(boundary.at(1),0,1,0,0,0,0);
     fem.addRotateList(boundary.at(0),0,-1,0,0,0,0);
 //    fem.addRotateList(boundary.at(4),0,1,0,0,1,0);
@@ -67,11 +66,11 @@ int main()
 //    fem.addRotateList(boundary.at(5),0,1,0,0,1,0);
     fem.setDamping(0.999);
     fem.setColorLessLarge(0,600);
-    fem.setDt( 1* 1e-3);
+    fem.setDt( 1e-3);
     fem.setG(0);
     fem.setColorMode(FORCE_MAGNITUDE);
-//    fem.addVelocityList(boundary.at(4),1,0,0);
-//    fem.addVelocityList(boundary.at(5),-1,0,0);
+//    fem.addVelocityList(boundary.at(4),-1,0,0);
+//    fem.addVelocityList(boundary.at(5),1,0,0);
 
     // configure global opengl state
     // -----------------------------

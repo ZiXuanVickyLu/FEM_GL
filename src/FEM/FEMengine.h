@@ -8,6 +8,8 @@
 #include<vector>
 #include <Eigen/Core>
 #include<Eigen/Dense>
+#include"neohookean.h"
+#include "virtual_fiber.h"
 
 using namespace std;
 
@@ -22,6 +24,10 @@ enum colorMode{
     VELOCITY_Z
 };
 
+enum Constitutive{
+    NEOHOOKEAN = 0,
+    VIRTUAL_FIBER
+};
 
 typedef struct boundaryList {
     vector<int> *subFace;
@@ -77,7 +83,9 @@ public:
         this -> init();
     };
 
-    ~FEMengine() = default;
+    ~FEMengine(){
+        delete material;
+    };
 
     inline void addForceList(vector<int>*face, float x, float y, float z){
         this -> forceList.emplace_back(bL(face, x,y,z));
@@ -144,13 +152,30 @@ public:
 
         cout<< "Cancel position boundary at " << face << endl;
     }
+    void setConstitutive(Constitutive con){
+        this -> constitutive = con;
+        switch(constitutive){
+            case(NEOHOOKEAN): {
+                if (!material)
+                    delete material;
+                auto res = new neohookean();
+                this -> material = res;
+                break;
+            }
+            case(VIRTUAL_FIBER): {
+                if(!material)
+                    delete material;
+                auto res = new virtual_fiber();
+                this -> material = res;
+                break;
+            }
+        }
+    }
 
     void setMethod(){}
     void setFloor(float y){ this -> floor = y; }
     void setDt (float t){ this -> dt = t; }
     void setG(float _g) { this -> g = _g; }
-    void setE(float e) { this -> E = e, this -> computeMuLa(); }
-    void setNu(float Nu){ this -> nu = Nu, this -> computeMuLa(); }
     void setNodeMass(float M){ this -> nodeMass = M; }
     void setColorLessLarge(float less, float large){ this ->colorLarge = large; this ->colorLess = less;}
     void setDamping(float damp){ this -> damping = damp; }
@@ -159,8 +184,10 @@ public:
     void setRebound(float re){this -> rebound = re;}
     void timeIntegrate();
 
+    Material * material = nullptr;
 
 private:
+    Constitutive constitutive;
     vector<float> *Vertex;
     vector<int> *Face, *Element;
     vector<vector<int> *> *Boundary;
@@ -174,16 +201,15 @@ private:
     float damping = 0.999;
     float dt = 1e-4;
     float g = 10.0f;
-    float E = 1e4;
-    float nu = 0.4f;
+
     float floor = -2;
     float nodeMass = 1.0f;
     float colorLess = 0;
     float colorLarge = 10;
-    float mu, la;
+
     bool isSub;
     int colorFrequent = 2;
-    float rebound = 0.3;
+    float rebound = 0.5;
     vector<float> force;
     vector<float> velocity;
     vector<float> color;
@@ -202,10 +228,6 @@ private:
     void computeForce();
     inline Eigen::Vector3f colorMap(float num);
 
-    inline void computeMuLa(){
-        this -> la = E * nu /((1 + nu) * ( 1 - 2 * nu));
-        this -> mu = E /( 2 * (1 + nu));
-    }
 
     inline Eigen::Vector3f node(unsigned long int i){
          auto ans = Eigen::Vector3f(
@@ -229,17 +251,13 @@ private:
         return ans;
     }
 
-    inline Eigen::Matrix3f F(long int i){
-        return this -> D(i) * this -> B[i];
+    inline Eigen::Matrix3f P(long int i){
+        auto ans = this -> material->P(this ->F(i));
+        return ans;
     }
 
-    inline Eigen::Matrix3f P(long int i){
-        auto F_ = this -> F(i);
-        auto F_neT = F_.inverse().transpose();
-        float J = max(F_.determinant(), 0.0001f);
-        Eigen::Matrix3f ans =  this -> mu * (F_ - F_neT) + this -> la * log(J) * F_neT;
-        return ans;
-        //neohookean
+    inline Eigen::Matrix3f F(long int i){
+        return this -> D(i) * this -> B[i];
     }
 
     static inline void colAdd(vector<float> *data, long int index, Eigen::Vector3f const &add) {
