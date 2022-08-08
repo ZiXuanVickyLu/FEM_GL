@@ -28,13 +28,29 @@ std::vector<int> sub[6];
 std::vector<std::vector<int>*> boundary;
 
 long unsigned int frame = 0;
+std::string tips = "------------------ Camera --------------------\n"
+                  "Move Up:     Q\n"
+                  "Move Down:   E\n"
+                  "Move Left:   A\n"
+                  "Move Right:  D\n"
+                  "Zoom In:     W or Mouse Wheel Up\n"
+                  "Zoom Out:    S or Mouse Wheel Down\n"
+                  "Rotate:      Hold On Mouse Right\n"
+                  "Free Rotate Trigger On:      R\n"
+                  "Free Rotate:                 Mouse Movement\n"
+                  "Free Rotate Trigger Off:     Mouse Left\n"
+                  "------------------ Control---------------------\n"
+                  "Exit:        ESC\n"
+                  "Camera Speed Up:             Keyboard Upward\n"
+                  "Camera Speed Down:           Keyboard Downward\n";
 
 int main()
 {
-//    //generate cube mesh
+//generate cube mesh
+
 //    auto c = cube(6,10,60,1,1,1,-3,-3,0);
 //    c.fileroot("../reference/");
-//       c.print_all();
+//    c.print_all();
 
 //load mesh
     for(auto & i : sub){
@@ -71,7 +87,8 @@ int main()
     fem.setColorMode(FORCE_MAGNITUDE);
 //    fem.addVelocityList(boundary.at(4),-1,0,0);
 //    fem.addVelocityList(boundary.at(5),1,0,0);
-
+string color = "Color Mode: " + fem.colorModeName;
+string constitutive = "Constitutive Model: " + fem.ConstitutiveName;
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
@@ -145,10 +162,15 @@ int main()
 
         // render your GUI
         t.dumpScreen();
-        ImGui::Begin("Simulation Statistic");
-        ImGui::Text("Color Mode");
+        ImGui::Begin("Simulation Statistic: ");
+
+        ImGui::Text("%s", color.c_str());
+        ImGui::Text("%s", constitutive.c_str());
         ImGui::End();
 
+        ImGui::Begin("Tips to Use");
+        ImGui:: Text("%s", tips.c_str());
+        ImGui::End();
 
         //rebind data buffer
         //position

@@ -2,6 +2,7 @@
 // Created by birdpeople on 2/25/2022.
 //
 
+
 #ifndef FEM_FEMENGINE_H
 #define FEM_FEMENGINE_H
 #include <iostream>
@@ -28,6 +29,7 @@ enum Constitutive{
     NEOHOOKEAN = 0,
     VIRTUAL_FIBER
 };
+
 
 typedef struct boundaryList {
     vector<int> *subFace;
@@ -152,6 +154,7 @@ public:
 
         cout<< "Cancel position boundary at " << face << endl;
     }
+
     void setConstitutive(Constitutive con){
         this -> constitutive = con;
         switch(constitutive){
@@ -160,6 +163,7 @@ public:
                     delete material;
                 auto res = new neohookean();
                 this -> material = res;
+                this -> ConstitutiveName = "NEOHOOKEAN";
                 break;
             }
             case(VIRTUAL_FIBER): {
@@ -167,6 +171,7 @@ public:
                     delete material;
                 auto res = new virtual_fiber();
                 this -> material = res;
+                this -> ConstitutiveName = "VIRTUAL_FIBER";
                 break;
             }
         }
@@ -179,14 +184,18 @@ public:
     void setNodeMass(float M){ this -> nodeMass = M; }
     void setColorLessLarge(float less, float large){ this ->colorLarge = large; this ->colorLess = less;}
     void setDamping(float damp){ this -> damping = damp; }
-    void setColorMode(colorMode m){this ->colorM = m;}
+    void setColorMode(colorMode m);
+
     void setColorFreq(int f){this -> colorFrequent = f;}
     void setRebound(float re){this -> rebound = re;}
     void timeIntegrate();
 
     Material * material = nullptr;
+    string ConstitutiveName = "";
+    string colorModeName = "";
 
 private:
+    inline void setColorModeName();
     Constitutive constitutive;
     vector<float> *Vertex;
     vector<int> *Face, *Element;

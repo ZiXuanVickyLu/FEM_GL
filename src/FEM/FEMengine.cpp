@@ -3,6 +3,17 @@
 //
 
 #include "FEMengine.h"
+
+string colorModeNameBuffer[8]={"FORCE_MAGNITUDE",
+                               "FORCE_X",
+                               "FORCE_Y",
+                               "FORCE_Z",
+                               "VELOCITY_MAGNITUDE",
+                               "VELOCITY_X",
+                               "VELOCITY_Y",
+                               "VELOCITY_Z"};
+
+
 inline Eigen::Vector3f FEMengine::colorMap(float num){
     typedef Eigen::Vector3f v3f;
 float index = (num > colorLarge ? colorLarge : num) / (this -> colorLarge - this -> colorLess) * 600;
@@ -20,32 +31,71 @@ inline void FEMengine::assignColor(long int vn, Eigen::Vector3f c){
     }
 }
 
+inline void FEMengine::setColorModeName() {
+    switch (this->colorM) {
+        case FORCE_X:
+            this->colorModeName = colorModeNameBuffer[1];
+
+        case FORCE_Y:
+            this->colorModeName = colorModeNameBuffer[2];
+
+        case FORCE_Z:
+            this->colorModeName = colorModeNameBuffer[3];
+
+        case VELOCITY_MAGNITUDE:
+            this->colorModeName = colorModeNameBuffer[4];
+
+        case VELOCITY_X:
+            this->colorModeName = colorModeNameBuffer[5];
+
+        case VELOCITY_Y:
+            this->colorModeName = colorModeNameBuffer[6];
+
+        case VELOCITY_Z:
+            this->colorModeName = colorModeNameBuffer[7];
+
+        default: //force_magnitude
+            this->colorModeName = colorModeNameBuffer[0];
+    }
+}
+void FEMengine::setColorMode(colorMode m)
+{
+    this ->colorM = m;
+    this -> setColorModeName();
+}
+
 inline float FEMengine::calcColorMap(long int vn){
 switch(this ->colorM){
     case FORCE_X:
+        this -> colorModeName = colorModeNameBuffer[1];
         return abs(this -> force.at(vn * 3 + 0));
     case FORCE_Y:
+        this -> colorModeName = colorModeNameBuffer[2];
         return abs(this -> force.at(vn * 3 + 1));
     case FORCE_Z:
+        this -> colorModeName = colorModeNameBuffer[3];
         return abs(this -> force.at(vn * 3 + 2));
     case VELOCITY_MAGNITUDE:
+        this -> colorModeName = colorModeNameBuffer[4];
         return (float)sqrt( pow(velocity.at(vn * 3 + 0),2)
         + pow(velocity.at(vn * 3 + 1),2)
         + pow(velocity.at(vn * 3 + 2),2));
-
     case VELOCITY_X:
+        this -> colorModeName = colorModeNameBuffer[5];
         return abs(this -> velocity.at(vn * 3 + 0));
     case VELOCITY_Y:
+        this -> colorModeName = colorModeNameBuffer[6];
         return abs(this -> velocity.at(vn * 3 + 1));
     case VELOCITY_Z:
+        this -> colorModeName = colorModeNameBuffer[7];
         return abs(this -> velocity.at(vn * 3 + 2));
     default: //force_magnitude
+        this -> colorModeName = colorModeNameBuffer[0];
         return (float)sqrt( pow(force.at(vn * 3 + 0),2)
         + pow(force.at(vn * 3 + 1),2)
         + pow(force.at(vn * 3 + 2),2));
 
-}
-
+    }
 }
 
 void FEMengine::init(){
