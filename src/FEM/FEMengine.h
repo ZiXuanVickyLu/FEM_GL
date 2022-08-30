@@ -11,6 +11,7 @@
 #include<Eigen/Dense>
 #include"neohookean.h"
 #include "virtual_fiber.h"
+#include "fiber.h"
 
 using namespace std;
 
@@ -30,7 +31,11 @@ enum Constitutive{
     VIRTUAL_FIBER
 };
 
-
+enum Method {
+    EXPLICIT = 0,
+    CG,
+    JACOBI
+};
 typedef struct boundaryList {
     vector<int> *subFace;
     float data[3];
@@ -155,29 +160,53 @@ public:
         cout<< "Cancel position boundary at " << face << endl;
     }
 
-    void setConstitutive(Constitutive con){
+    inline void setConstitutive(Constitutive con){
         this -> constitutive = con;
-        switch(constitutive){
-            case(NEOHOOKEAN): {
+        switch(constitutive) {
+            case (NEOHOOKEAN): {
                 if (!material)
                     delete material;
                 auto res = new neohookean();
-                this -> material = res;
-                this -> ConstitutiveName = "NEOHOOKEAN";
+                this->material = res;
+                this->ConstitutiveName = "NEO-HOOKEAN";
                 break;
             }
-            case(VIRTUAL_FIBER): {
-                if(!material)
+            case (VIRTUAL_FIBER): {
+                if (!material)
                     delete material;
                 auto res = new virtual_fiber();
-                this -> material = res;
-                this -> ConstitutiveName = "VIRTUAL_FIBER";
+                this->material = res;
+                this->ConstitutiveName = "VIRTUAL_FIBER";
                 break;
             }
+            default:{ //Fiber:
+                if (!material)
+                    delete material;
+                auto res = new Fiber();
+                this->material = res;
+                this->ConstitutiveName = "9 AXIS FIBER";
+                break;
+        }
         }
     }
 
-    void setMethod(){}
+    inline void setMethod(Method m){
+        this ->method = m;
+        switch(this ->method){
+            case JACOBI:{
+                this -> methodName = "JACOBI ITERATIVE METHOD";
+            }break;
+
+            case CG:{
+                this -> methodName = "CONJUGATE GRADIENT METHOD";
+            }break;
+
+            default:{
+                this -> methodName = "EXPLICIT METHOD";
+            }
+        }
+
+    }
     void setFloor(float y){ this -> floor = y; }
     void setDt (float t){ this -> dt = t; }
     void setG(float _g) { this -> g = _g; }
@@ -193,7 +222,7 @@ public:
     Material * material = nullptr;
     string ConstitutiveName = "";
     string colorModeName = "";
-
+    string methodName = "";
 private:
     inline void setColorModeName();
     Constitutive constitutive;
@@ -201,7 +230,7 @@ private:
     vector<int> *Face, *Element;
     vector<vector<int> *> *Boundary;
 
-    unsigned long int BoundaryNum;
+    unsigned long int BoundaryNum{};
     vector<unsigned long int> BoundaryFaceNum;
 
     unsigned long int    VertexNum = 0,
@@ -230,11 +259,16 @@ private:
     vector<bL> forceList;
     vector<rL> rotationList;
     colorMode colorM = FORCE_MAGNITUDE;
+    Method method;
     long int runtime = 0;
+
 
     void init();
     void computeB_Volume();
     void computeForce();
+    void computeK();
+    void equipK();
+
     inline Eigen::Vector3f colorMap(float num);
 
 

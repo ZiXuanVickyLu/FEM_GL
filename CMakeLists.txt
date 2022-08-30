@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(FEM)
+project(ENGIN)
 set(CMAKE_CXX_STANDARD 14)
 set(THIRD_PARTY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external)
 
@@ -24,7 +24,6 @@ set(TINYCTHREAD "${GLFW_SOURCE_DIR}/deps/tinycthread.h"
 set(PLY "${THIRD_PARTY_DIR}/plycpp/plycpp.cpp")
 
 #add imgui lib
-
 set(IMGUI_SRC "")
 set(IMGUI_DIR 	"${THIRD_PARTY_DIR}/imgui"
 				"${THIRD_PARTY_DIR}/imgui/misc/cpp"
@@ -45,26 +44,28 @@ add_library(imgui_lib STATIC ${IMGUI_SRC})
 target_include_directories(imgui_lib PUBLIC "${THIRD_PARTY_DIR}/imgui"
 										"${THIRD_PARTY_DIR}/glfw-3.3.6/include")
 
+#set public include directories
+set(INCLUDE_PUBLIC  "${THIRD_PARTY_DIR}/eigen"
+		"${THIRD_PARTY_DIR}/glfw-3.3.6/deps"
+		"${THIRD_PARTY_DIR}/glm-0.9.9.8"
+		"${THIRD_PARTY_DIR}/glad/include"
+		"${THIRD_PARTY_DIR}/plycpp"
+		"${IMGUI_DIR}")
+
 #add source to application
-aux_source_directory(./src SOURCE)
+
 aux_source_directory(./src/render RENDER)
 aux_source_directory(./src/loader LOADER)
 aux_source_directory(./src/cubegen CUBE)
 aux_source_directory(./src/FEM FEM)
-set (SRC "${SOURCE}" "${RENDER}" "${LOADER}" "${CUBE}" ${FEM} src/FEM/neohookean.cpp src/FEM/neohookean.h src/FEM/Constitutive.h)
+set (APP_SRC "${RENDER}" "${LOADER}" "${CUBE}" ${FEM} )
 
 
 #add project built dependence
-add_executable(fem ${SRC} ${GLAD} ${GETOPT} ${TINYCTHREAD} ${PLY})
+add_executable(fem "./src/mainFEM.cpp" ${APP_SRC} ${GLAD} ${GETOPT} ${TINYCTHREAD} ${PLY})
 
-#link glfw library(libglfw3.a) built from source
+#link glfw library(libglfw3.a) built from source, add imgui_lib build from source
 target_link_libraries(fem glfw imgui_lib)
 
-target_include_directories(fem PUBLIC
-        "${THIRD_PARTY_DIR}/eigen"
-        "${THIRD_PARTY_DIR}/glfw-3.3.6/deps"
-        "${THIRD_PARTY_DIR}/glm-0.9.9.8"
-        "${THIRD_PARTY_DIR}/glad/include"
-	  	"${THIRD_PARTY_DIR}/plycpp"
-		"${IMGUI_DIR}"
-        )
+#link include directories
+target_include_directories(fem PUBLIC "${INCLUDE_PUBLIC}")

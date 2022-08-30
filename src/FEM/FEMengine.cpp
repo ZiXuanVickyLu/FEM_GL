@@ -128,7 +128,8 @@ void FEMengine::init(){
             BoundaryFaceNum.emplace_back(ele->size());
 
     }
-    this ->setConstitutive(NEOHOOKEAN);
+    this -> setConstitutive(NEOHOOKEAN);
+    this -> setMethod(EXPLICIT);
     this -> computeB_Volume();
     std::cout<<"======= FEMengine dump ======"<< std::endl;
     std::cout << "Initialized!"<< std::endl;
@@ -271,50 +272,51 @@ for(int i = 0; i < 3; i++){
 }
 
 void FEMengine::timeIntegrate(){
-    this -> computeForce(); //force boundary assignment
-    handleForce();
-    //force -> velocity
-    for(long int vn = 0; vn< this -> VertexNum; vn++){
-        for(int i = 0; i < 3; i++) {
-            this->velocity.at(vn * 3 + i) *= this->damping; //damping velocity
-            this->velocity.at(vn * 3 + i) +=  this -> force.at(vn * 3 + i) / this -> nodeMass * this -> dt;
+    if(method == EXPLICIT) {
+        this->computeForce(); //force boundary assignment
+        handleForce();
+        //force -> velocity
+        for (long int vn = 0; vn < this->VertexNum; vn++) {
+            for (int i = 0; i < 3; i++) {
+                this->velocity.at(vn * 3 + i) *= this->damping; //damping velocity
+                this->velocity.at(vn * 3 + i) += this->force.at(vn * 3 + i) / this->nodeMass * this->dt;
+            }
         }
-    }
 
-    handleVelocity(); // velocity boundary assignment
-    handleRotation();
-    // velocity -> position
-    for(long int vn = 0;vn < this -> VertexNum; vn++){
-        for(int i = 0; i < 3; i++) {
-            this->Vertex->at(vn * 6 + i) += this -> dt * this -> velocity.at(vn * 3 + i);
+        handleVelocity(); // velocity boundary assignment
+        handleRotation();
+        // velocity -> position
+        for (long int vn = 0; vn < this->VertexNum; vn++) {
+            for (int i = 0; i < 3; i++) {
+                this->Vertex->at(vn * 6 + i) += this->dt * this->velocity.at(vn * 3 + i);
 
-            //coordinate y (height, floor collision detection)
-            if( i == 1) {
-                if (this->Vertex->at(vn * 6 + 1) < this->floor) {
-                    this->velocity.at(vn * 3 + 1) = rebound * this->velocity.at(vn * 3 + 1);
-                    this->Vertex->at(vn * 6 + 1) = this->floor;
+                //coordinate y (height, floor collision detection)
+                if (i == 1) {
+                    if (this->Vertex->at(vn * 6 + 1) < this->floor) {
+                        this->velocity.at(vn * 3 + 1) = rebound * this->velocity.at(vn * 3 + 1);
+                        this->Vertex->at(vn * 6 + 1) = this->floor;
+                    }
                 }
             }
-        }
-        if(!(runtime % colorFrequent)) {
-            auto tmp = calcColorMap(vn);
-            auto colorVector = colorMap(tmp);
-            assignColor(vn, colorVector);
+            if (!(runtime % colorFrequent)) {
+                auto tmp = calcColorMap(vn);
+                auto colorVector = colorMap(tmp);
+                assignColor(vn, colorVector);
 //
-        }
-    }
-    if(!(runtime % colorFrequent)) {
-        for(int i = 0;i<2;i++)
-            for (int fn = 0; fn < FaceNum; fn++) {
-                auto v1 = Face->at(fn * 3 + 0);
-                auto v2 = Face->at(fn * 3 + 1);
-                auto v3 = Face->at(fn * 3 + 2);
-                this->smooth(v1, v2, v3);
             }
+        }
+        if (!(runtime % colorFrequent)) {
+            for (int i = 0; i < 2; i++)
+                for (int fn = 0; fn < FaceNum; fn++) {
+                    auto v1 = Face->at(fn * 3 + 0);
+                    auto v2 = Face->at(fn * 3 + 1);
+                    auto v3 = Face->at(fn * 3 + 2);
+                    this->smooth(v1, v2, v3);
+                }
+        }
+        handlePosition(); // vertex position boundary assignment
+        std::cout << "======= FEMengine dump ======" << std::endl;
+        std::cout << "TimeIntegrate!" << std::endl;
     }
-    handlePosition(); // vertex position boundary assignment
-    std::cout<<"======= FEMengine dump ======"<< std::endl;
-    std::cout << "TimeIntegrate!"<< std::endl;
-
     this -> runtime ++;
 }

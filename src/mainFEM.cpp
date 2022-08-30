@@ -87,8 +87,13 @@ int main()
     fem.setColorMode(FORCE_MAGNITUDE);
 //    fem.addVelocityList(boundary.at(4),-1,0,0);
 //    fem.addVelocityList(boundary.at(5),1,0,0);
+
+
+// set statistic info (should after all setting)
+
 string color = "Color Mode: " + fem.colorModeName;
 string constitutive = "Constitutive Model: " + fem.ConstitutiveName;
+string methods = "Method: " + fem.methodName;
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
@@ -166,6 +171,7 @@ string constitutive = "Constitutive Model: " + fem.ConstitutiveName;
 
         ImGui::Text("%s", color.c_str());
         ImGui::Text("%s", constitutive.c_str());
+        ImGui::Text("%s", methods.c_str());
         ImGui::End();
 
         ImGui::Begin("Tips to Use");
@@ -200,7 +206,9 @@ string constitutive = "Constitutive Model: " + fem.ConstitutiveName;
 
         // render boxes
         glBindVertexArray(VAO);
-        for (unsigned int i = 0; i < 1; i++)
+        //model number
+        unsigned int modelNumber = 1;
+        for (unsigned int i = 0; i < modelNumber; i++)
         {
 
             // calculate the model matrix for each object and pass it to shader before drawing
