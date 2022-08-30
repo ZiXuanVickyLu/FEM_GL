@@ -131,6 +131,11 @@ void FEMengine::init(){
     this -> setConstitutive(NEOHOOKEAN);
     this -> setMethod(EXPLICIT);
     this -> computeB_Volume();
+
+    this ->K.resize(this -> VertexNum * 3,this -> VertexNum * 3);
+    this ->A.resize(this -> VertexNum * 3,this -> VertexNum * 3);
+    this ->b.resize(this -> VertexNum * 3);
+    this ->x.resize(this -> VertexNum * 3);
     std::cout<<"======= FEMengine dump ======"<< std::endl;
     std::cout << "Initialized!"<< std::endl;
 
@@ -239,8 +244,6 @@ void FEMengine::handlePosition(){
             }
         }
 
-
-
 }
 
 void FEMengine::handleVelocity(){
@@ -270,6 +273,137 @@ for(int i = 0; i < 3; i++){
  }
 
 }
+void FEMengine::computeK() {
+   vector< Eigen::TensorFixedSize<Eigen::Matrix3f,Eigen::Sizes<4,3>> > dD;
+    dD.resize(this->ElementNum);
+
+    vector< Eigen::TensorFixedSize<Eigen::Matrix3f,Eigen::Sizes<4,3>> > dF;
+    dF.resize(this->ElementNum);
+
+    vector< Eigen::TensorFixedSize<Eigen::Matrix3f,Eigen::Sizes<4,3>> > dP;
+    dP.resize(this->ElementNum);
+
+    vector< Eigen::TensorFixedSize<Eigen::Matrix3f,Eigen::Sizes<4,3>> > dH;
+    dH.resize(this->ElementNum);
+
+
+    for(int en = 0;en<this->ElementNum;en++) {
+        for (int n = 0; n < 4; ++n)
+            for (int d = 0; d < 3; ++d)
+                for (int i = 0; i < 3; ++i)
+                    for (int j = 0; j < 3; ++j) {
+                        dF[en](n, d)(i, j) = 0;
+                    }
+        for (int n = 0; n < 4; ++n)
+            for (int d = 0; d < 3; ++d)
+                for (int i = 0; i < 3; ++i)
+                    for (int j = 0; j < 3; ++j) {
+                        dD[en](n, d)(i, j) = 0;
+                    }
+        for (int n = 0; n < 4; ++n)
+            for (int d = 0; d < 3; ++d)
+                for (int i = 0; i < 3; ++i)
+                    for (int j = 0; j < 3; ++j) {
+                        dP[en](n, d)(i, j) = 0;
+                    }
+
+        for (int n = 0; n < 4; ++n)
+            for (int d = 0; d < 3; ++d)
+                for (int i = 0; i < 3; ++i)
+                    for (int j = 0; j < 3; ++j) {
+                        dH[en](n, d)(i, j) = 0;
+                    }
+    }
+
+    for(int en = 0;en < this->ElementNum;++en){
+        for(int n = 0;n<3;++n)
+            for(int d = 0;d<3;++d)
+                dD[en](n,d)(d,n)=1;
+
+        for(int d = 0;d<3;++d)
+            dD[en](3,d) = -(dD[en](0,d)+dD[en](1,d)+dD[en](2,d));
+
+        for(int n=0;n<4;++n)
+            for(int d=0;d<3;++d)
+                dF[en](n,d) = dD[en](n,d) * this->B[en];
+
+       auto F = this -> F(en);
+       auto F_1 = F.inverse();
+       auto F_1_T = F_1.transpose();
+       auto J = F.determinant() > 0.001? F.determinant() : 0.001;
+        for(int n = 0;n<4;++n)
+            for(int d = 0;d<3;++d)
+                for(int i = 0;i<3;++i)
+                    for(int j=0;j<3;++j){
+                        auto ddF = Eigen::Matrix3f();
+                        ddF << 0,0,0,
+                            0,0,0,
+                            0,0,0;
+                        ddF(i,j) = 1.0;
+                        auto dF_T = ddF.transpose();
+                        auto dTr = F_1_T(i,j);
+                        auto E = 1000.0; auto nu = 0.1;
+                        auto mu = E /(2 * (1+nu)); auto la = E * nu /((1+nu)*(1-2 * nu));
+                        auto dP_dFij = mu * ddF + (mu - la * log(J)) * F_1_T * dF_T * F_1_T + la * dTr * F_1_T;
+                        auto dFij_ndim = dD[en](n,d)(i,j);
+                        dP[en](n,d) += dP_dFij * dFij_ndim;
+                        /*
+                       auto tmp = dP[en](n,d);
+                       cout<<tmp(0,0)<<","<<tmp(0,1)<<","<<tmp(0,2)<<endl;
+                        cout<<tmp(1,0)<<","<<tmp(1,1)<<","<<tmp(1,2)<<endl;
+                        cout<<tmp(2,0)<<","<<tmp(2,1)<<","<<tmp(2,2)<<endl;
+                        */
+                    }
+
+
+        for(int n = 0;n<4;++n){
+            for(int d = 0;d<3;++d)
+                dH[en](n,d) = - this->volume[en] * dP[en](n,d) * this->B[en].transpose();
+        }
+
+        for(int n = 0;n<4;++n){
+            auto i = this ->Element->at(en *4 +n);
+            for(int d = 0;d<3;++d){
+                auto ind = i * 3 + d;
+                for(int j = 0;j<3;++j){
+                    K.coeffRef(this->Element->at(en * 4 + 0) * 3 +0,ind)  += dH[en](n,d)(0,j);
+                    K.coeffRef(this->Element->at(en * 4 + 1) * 3 +1,ind)  += dH[en](n,d)(1,j);
+                    K.coeffRef(this->Element->at(en * 4 + 2) * 3 +2,ind)  += dH[en](n,d)(2,j);
+                }
+                K.coeffRef(this->Element->at(en * 4 + 3) * 3 +0,ind)  +=
+                        -(dH[en](n,d)(0,0) + dH[en](n,d)(0,1) + dH[en](n,d)(0,2));
+                K.coeffRef(this->Element->at(en * 4 +3) * 3 +1,ind)  +=
+                        -(dH[en](n,d)(1,0) + dH[en](n,d)(1,1) + dH[en](n,d)(1,2));
+                K.coeffRef(this->Element->at(en * 4 + 3) * 3 +2,ind)  +=
+                        -(dH[en](n,d)(2,0) + dH[en](n,d)(2,1) +dH[en](n,d)(2,2));
+            }
+        }
+
+    }
+
+
+}
+void FEMengine::assembly(){
+for(int i = 0;i < this ->VertexNum;++i)
+    for(int j =0;j<3;++j)
+        for(int k = 0;k<this ->VertexNum * 3;++k)
+            K.coeffRef(i * 3 + j ,k) *= (this->dt * this ->dt / this->nodeMass),
+
+A = -K;
+
+this->computeForce();
+handleForce();//force boundary assignment
+
+    for(int i = 0;i < this ->VertexNum;++i)
+    for(int j =0;j<3;++j){
+        A.coeffRef(i * 3 + j,i * 3 + j) += 1.0;
+        b(i * 3 +j) = this -> velocity[i * 3 +j] + this->dt / this->nodeMass * this-> force[i * 3 + j];
+        x(i * 3 + j) = this->velocity[i * 3 +j];
+    }
+
+
+
+}
 
 void FEMengine::timeIntegrate(){
     if(method == EXPLICIT) {
@@ -282,7 +416,17 @@ void FEMengine::timeIntegrate(){
                 this->velocity.at(vn * 3 + i) += this->force.at(vn * 3 + i) / this->nodeMass * this->dt;
             }
         }
-
+    }else {
+        this -> computeK();
+        this -> assembly();
+        Eigen::ConjugateGradient<Eigen::SparseMatrix<float>> lscg;
+        lscg.compute(A);
+        lscg.setTolerance(0.0001);
+        x = lscg.solve(b);
+        for(int i = 0;i<this->VertexNum;i++)
+            for(int d = 0;d<3;++d)
+                this -> velocity[i * 3 + d] = x(i * 3 + d);
+    }
         handleVelocity(); // velocity boundary assignment
         handleRotation();
         // velocity -> position
@@ -314,9 +458,9 @@ void FEMengine::timeIntegrate(){
                     this->smooth(v1, v2, v3);
                 }
         }
-        handlePosition(); // vertex position boundary assignment
-        std::cout << "======= FEMengine dump ======" << std::endl;
-        std::cout << "TimeIntegrate!" << std::endl;
-    }
+
+    handlePosition(); // vertex position boundary assignment
+    std::cout << "======= FEMengine dump ======" << std::endl;
+    std::cout << "TimeIntegrate!" << std::endl;
     this -> runtime ++;
 }

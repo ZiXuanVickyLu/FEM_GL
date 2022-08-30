@@ -12,6 +12,8 @@
 #include"neohookean.h"
 #include "virtual_fiber.h"
 #include "fiber.h"
+#include <Eigen/Sparse>
+#include <unsupported/Eigen/CXX11/Tensor>
 
 using namespace std;
 
@@ -253,6 +255,11 @@ private:
     vector<float> color;
     vector<float> volume;
     vector<Eigen::Matrix3f> B;
+    //implicit method
+    Eigen::SparseMatrix<float> A;
+    Eigen::SparseMatrix<float> K;
+    Eigen::VectorXf b;
+    Eigen::VectorXf x;
 
     vector<bL> positionList;
     vector<bL> velocityList;
@@ -267,7 +274,7 @@ private:
     void computeB_Volume();
     void computeForce();
     void computeK();
-    void equipK();
+    void assembly();
 
     inline Eigen::Vector3f colorMap(float num);
 

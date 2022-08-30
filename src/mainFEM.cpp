@@ -15,7 +15,7 @@ const unsigned int SCR_HEIGHT = 1800;
 
 // camera
 Camera camera(glm::vec3(0.0f, 1.0/20, 5.0f));
-float globalScaler = 50;
+float globalScaler = 5;
 
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
@@ -48,16 +48,16 @@ int main()
 {
 //generate cube mesh
 
-//    auto c = cube(6,10,60,1,1,1,-3,-3,0);
-//    c.fileroot("../reference/");
-//    c.print_all();
+   // auto c = cube(2,2,2,1,1,1,-1,-1,0);
+   // c.fileroot("../reference/");
+  //  c.print_all();
 
 //load mesh
     for(auto & i : sub){
         boundary.emplace_back(&i);
     }
 
-    tetLoader t("../reference/" ,"bar101050", &ver, &face, &ele,&boundary);
+    tetLoader t("../reference/" ,"bar222", &ver, &face, &ele,&boundary);
     t.loadAll();
 
 
@@ -71,19 +71,20 @@ int main()
 
 //    //creat FEM engine
     auto fem = FEMengine(&ver, &face, &ele,&boundary);
-    fem.setG(10);
-    fem.setFloor(-10);
-    fem.setConstitutive(VIRTUAL_FIBER);
-    fem.addRotateList(boundary.at(1),0,1,0,0,0,0);
-    fem.addRotateList(boundary.at(0),0,-1,0,0,0,0);
+    fem.setG(20);
+    fem.setFloor(-2);
+    fem.setConstitutive(NEOHOOKEAN);
+    fem.setMethod(CG);
+   // fem.addRotateList(boundary.at(1),0,1,0,0,0,0);
+    //fem.addRotateList(boundary.at(0),0,-1,0,0,0,0);
 //    fem.addRotateList(boundary.at(4),0,1,0,0,1,0);
 //    fem.addRotateList(boundary.at(3),0,1,0,0,1,0); //front
 //    fem.addRotateList(boundary.at(2),0,1,0,0,1,0);
 //    fem.addRotateList(boundary.at(5),0,1,0,0,1,0);
     fem.setDamping(0.999);
     fem.setColorLessLarge(0,600);
-    fem.setDt( 1e-3);
-    fem.setG(0);
+    fem.setDt( 5*1e-3);
+
     fem.setColorMode(FORCE_MAGNITUDE);
 //    fem.addVelocityList(boundary.at(4),-1,0,0);
 //    fem.addVelocityList(boundary.at(5),1,0,0);
